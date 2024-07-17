@@ -134,7 +134,7 @@ class H5PPlayerXBlock(XBlock, CompletableXBlockMixin):
             "How often current user content state should be autosaved (in seconds). "
             "Set it to zero if you don't want to save content state."
         ),
-        default=0,
+        default=1,
         scope=Scope.settings,
     )
 
