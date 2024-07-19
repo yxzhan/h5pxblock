@@ -124,7 +124,7 @@ class H5PPlayerXBlock(XBlock, CompletableXBlockMixin):
         help=_(
             "Select True if this component will save score"
         ),
-        default=False,
+        default=True,
         scope=Scope.settings,
     )
 
@@ -289,6 +289,7 @@ class H5PPlayerXBlock(XBlock, CompletableXBlockMixin):
                 "player_id": self.player_id,
                 "frame": self.show_frame,
                 "copyright": self.show_copyright,
+                "scorable": self.has_score,
                 "icon": self.show_h5p,
                 "fullScreen": self.show_fullscreen,
                 "saveFreq": save_freq,

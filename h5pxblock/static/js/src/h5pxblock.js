@@ -24,6 +24,7 @@ function H5PPlayerXBlock(runtime, element, args) {
           icon: args.icon,
           fullScreen: args.fullScreen,
           user: userObj,
+          isScoringEnabled: args.scorable,
           saveFreq: args.saveFreq,
           customJs: args.customJsPath,
           contentUserData: [
@@ -40,6 +41,9 @@ function H5PPlayerXBlock(runtime, element, args) {
           await new H5PStandalone.H5P(el, options);
           $(el).siblings(".spinner-container").find(".spinner-border").hide();
           $(el).show();
+
+          // Enable summary reporting of Interative book
+          H5PIntegration.reportingIsEnabled = options.isScoringEnabled
 
           H5P.externalDispatcher.on("xAPI", (event) => {
             let hasStatement = event && event.data && event.data.statement;
