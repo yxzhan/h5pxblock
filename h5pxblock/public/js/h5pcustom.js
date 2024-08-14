@@ -52,3 +52,13 @@ H5P.jQuery.ajaxSetup({
         }
     }
 });
+
+// Add mathJax library
+function loadMathJax() {
+    var script = document.createElement('script');
+    script.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-AMS-MML_HTMLorMML';
+    script.async = true;
+    document.head.appendChild(script);
+}
+
+loadMathJax();
