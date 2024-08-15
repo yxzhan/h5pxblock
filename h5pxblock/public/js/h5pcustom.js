@@ -54,11 +54,25 @@ H5P.jQuery.ajaxSetup({
 });
 
 // Add mathJax library
-function loadMathJax() {
-    var script = document.createElement('script');
-    script.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-AMS-MML_HTMLorMML';
-    script.async = true;
-    document.head.appendChild(script);
-}
-
-loadMathJax();
+H5P.externalDispatcher.on('domChanged', function(data) {
+    (function () {
+        var script = document.createElement('script');
+        script.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-AMS-MML_HTMLorMML';
+        script.async = true;
+        document.head.appendChild(script);
+    })();
+    /***
+     * Since the interactive book only loads the first two pages in the begeinning, 
+     * need to manually call function MathJax.Hub.Typeset() after the rest of the page is loaded.
+     * Listen to the click event of the next button to call the function.
+     */
+    document.body.addEventListener('click', function(event) {
+        event.preventDefault();
+        event.stopPropagation();
+        const classesOfNavBtn = ['h5p-interactive-book-status-arrow', 'navigation-button'];
+        const isNavBtn = classesOfNavBtn.some(cls => event.target.classList.contains(cls));
+        if (isNavBtn) {
+            MathJax.Hub.Typeset();
+        } 
+    });
+});
