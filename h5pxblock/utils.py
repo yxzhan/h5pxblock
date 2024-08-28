@@ -90,6 +90,22 @@ def unpack_package_local_path(package, path):
     with ZipFile(package, 'r') as h5p_zip:
         log.info('Extracting all the files now from %s', package.name)
         h5p_zip.extractall(path)
+            
+def pack_package_local_path(package, path):
+    """
+    Packs a zip file from h5p local path
+    """
+    with ZipFile(package, 'w') as h5p_zip:
+        for root, _, files in os.walk(path):
+            for file in files:
+                if file == os.path.basename(package):
+                    # Skip the output zip file
+                    continue
+                # Create the full file path
+                full_path = os.path.join(root, file)
+                # Add the file to the zip file, using a relative path
+                h5p_zip.write(full_path, os.path.relpath(full_path, path))
+
 
 
 def unpack_and_upload_on_cloud(package, storage, path):

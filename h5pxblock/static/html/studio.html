@@ -19,7 +19,7 @@
         </div>
       </div>
       {% if h5p_xblock.h5p_content_meta %}
-      <div class="tip setting-help "><span><b>{% trans "Currently:" %}</b> {{ h5p_xblock.h5p_content_meta.name }}</span>&nbsp;<span><b>{% trans "Upload time:" %}</b> {{ h5p_xblock.h5p_content_meta.upload_time }}</span></div>
+      <div class="tip setting-help "><span><b>{% trans "Currently:" %}</b> <a href="{{ h5p_xblock.h5p_download_url }}" target="_blank">{{ h5p_xblock.h5p_content_meta.name }} </a> </span>&nbsp;<span><b>{% trans "Upload time:" %}</b> {{ h5p_xblock.h5p_content_meta.upload_time }}</span></div>
       {% endif %}
 
       <div class="astrodivider"><div class="astrodividermask"></div><span><i>OR</i></span></div>

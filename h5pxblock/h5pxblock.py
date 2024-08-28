@@ -3,6 +3,7 @@
 import json
 import logging
 import os
+import shutil
 
 from enum import Enum
 
@@ -43,6 +44,7 @@ from h5pxblock.utils import (
     str2bool,
     unpack_and_upload_on_cloud,
     unpack_package_local_path,
+    pack_package_local_path
 )
 
 # Make '_' a no-op so we can scrape strings
@@ -94,7 +96,7 @@ class H5PPlayerXBlock(XBlock, CompletableXBlockMixin):
     show_frame = Boolean(
         display_name=_("Show H5P player frame"),
         help=_("whether to show H5P player frame and button"),
-        default=False,
+        default=True,
         scope=Scope.settings
     )
 
@@ -222,6 +224,17 @@ class H5PPlayerXBlock(XBlock, CompletableXBlockMixin):
     @property
     def h5p_content_url(self):
         return "{}/{}".format(H5P_URL, self.get_block_path_prefix)
+    
+    @property
+    def h5p_download_url(self):
+        if self.h5p_content_json_path is not None:
+            h5p_filename = self.h5p_content_meta.get("name")
+            h5p_filepath = os.path.join(self.local_storage_path, h5p_filename)
+            if not os.path.exists(h5p_filepath):
+                pack_package_local_path(h5p_filepath, self.local_storage_path)
+            return "{}/{}".format(self.h5p_content_url, h5p_filename)
+        else:
+            return ''
 
     @property
     def local_storage_path(self):
@@ -248,6 +261,7 @@ class H5PPlayerXBlock(XBlock, CompletableXBlockMixin):
             "weight": self.fields["weight"],
             "points": self.fields["points"],
             "h5p_xblock": self,
+            "h5pZipFile": self.h5p_download_url
         }
 
     def studio_view(self, context=None):
@@ -297,7 +311,8 @@ class H5PPlayerXBlock(XBlock, CompletableXBlockMixin):
                 "user_email": user.emails[0],
                 "userData": self.interaction_data,
                 "customJsPath": self.runtime.local_resource_url(self, "public/js/h5pcustom.js"),
-                "h5pJsonPath": self.h5p_content_json_path
+                "h5pJsonPath": self.h5p_content_json_path,
+                "h5pZipFile": self.h5p_download_url
             }
         )
         return frag
